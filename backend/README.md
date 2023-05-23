@@ -3,16 +3,25 @@
 - Already Done
 
   -  Access to
+ 
         http://localhost/api/mgr/applicants?action=XXXX
+        
         http://localhost/applicant/?XXXX
 
   -  Capable of
+  
         listing applicants
+        
         adding applicants
+        
         deleting applicants
+        
         modifing applicants
+        
   -  MySQL database
+  
         table of applicants
+        
         table of jobs (positions)
 
 - To be Done
