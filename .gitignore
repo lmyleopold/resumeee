@@ -1,3 +1,6 @@
 Scripts/
 backend/migrations/
 .idea/
+
+__pycache__
+temp.pdf
