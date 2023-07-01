@@ -1,2 +1,5 @@
+docx2pdf
+os
+pymupdf
 re
 xml
