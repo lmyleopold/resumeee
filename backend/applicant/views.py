@@ -79,11 +79,28 @@ def listjobs(request):
 
     return HttpResponse(html_template % tableContent)
 
+
 def jobs(request):
+    # 根据session判断用户是否是登录的申请者用户
+    if 'usertype' not in request.session:
+        return JsonResponse({
+            'ret': 302,
+            'msg': '未登录',
+            'redirect': '/applicant/sign.html'},
+            status=302)
+
+    if request.session['usertype'] != 'usr':
+        return JsonResponse({
+            'ret': 302,
+            'msg': '用户非usr类型',
+            'redirect': '/applicant/sign.html'},
+            status=302)
+    # GET请求 参数在url中，同过request 对象的 GET属性获取
+    if request.method == 'GET':
+        request.params = request.GET
     try:
-        # 返回一个 QuerySet 对象 ，包含所有的表记录
-        qs = Job.objects.values()
         # 要获取的第几页
+        print('=========='+str(request)+'==============')
         pagenum = request.params['pagenum']
         # 每页要显示多少条记录
         pagesize = request.params['pagesize']
@@ -95,6 +112,7 @@ def jobs(request):
         page = pgnt.page(pagenum)
         # 将 QuerySet 对象 转化为 list 类型
         retlist = list(page)
+
         # total指定了 一共有多少数据
         return JsonResponse({'ret': 0, 'retlist': retlist, 'total': pgnt.count})
 
@@ -103,4 +121,4 @@ def jobs(request):
 
     except:
         return HttpResponse("这里是分页展示岗位")
-        return JsonResponse({'ret': 2, 'msg': f'未知错误\n{traceback.format_exc()}'})
+        # return JsonResponse({'ret': 2, 'msg': f'未知错误\n'})

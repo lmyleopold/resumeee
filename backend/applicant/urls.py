@@ -5,11 +5,14 @@
 """
 
 from django.urls import path
-
+from . import sign_in_out
 from . import views
 
 urlpatterns = [
     path('', views.applicant),
     path('resume/', views.resume),
-    path('jobs/', views.listjobs),
+    # path('jobs/', views.listjobs),
+    path('jobs/', views.jobs),
+    path('signin', sign_in_out.signin),
+    path('signout', sign_in_out.signout),
 ]

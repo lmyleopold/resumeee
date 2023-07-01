@@ -1,29 +1,29 @@
 """
-    >File Name: applicant
+    >File Name: job
     >Author: lmyleopold
-    >Created Time: 2023/5/22 23:16
+    >Created Time: 2023/7/2 0:34
 """
 from django.http import JsonResponse
 import json
-from common.models import Applicant
+from common.models import Job
 from django.core.paginator import Paginator, EmptyPage
 
 
 def dispatcher(request):  # 将请求参数统一放入request 的 params 属性中，方便后续处理
     # 根据session判断用户是否是登录的管理员用户
-    # if 'usertype' not in request.session:
-    #     return JsonResponse({
-    #         'ret': 302,
-    #         'msg': '未登录',
-    #         'redirect': '/mgr/sign.html'},
-    #         status=302)
-    #
-    # if request.session['usertype'] != 'mgr':
-    #     return JsonResponse({
-    #         'ret': 302,
-    #         'msg': '用户非mgr类型',
-    #         'redirect': '/mgr/sign.html'},
-    #         status=302)
+    if 'usertype' not in request.session:
+        return JsonResponse({
+            'ret': 302,
+            'msg': '未登录',
+            'redirect': '/mgr/sign.html'},
+            status=302)
+
+    if request.session['usertype'] != 'mgr':
+        return JsonResponse({
+            'ret': 302,
+            'msg': '用户非mgr类型',
+            'redirect': '/mgr/sign.html'},
+            status=302)
 
     # GET请求 参数在url中，同过request 对象的 GET属性获取
     if request.method == 'GET':
@@ -36,20 +36,20 @@ def dispatcher(request):  # 将请求参数统一放入request 的 params 属性
 
     # 根据不同的action分派给不同的函数进行处理
     action = request.params['action']
-    if action == 'list_applicant':
-        return listapplicants(request)
-    elif action == 'add_applicant':
-        return addapplicant(request)
-    elif action == 'modify_applicant':
-        return modifyapplicant(request)
-    elif action == 'del_applicant':
-        return deleteapplicant(request)
+    if action == 'list_job':
+        return listjobs(request)
+    elif action == 'add_job':
+        return addjob(request)
+    elif action == 'modify_job':
+        return modifyjob(request)
+    elif action == 'del_job':
+        return deletejob(request)
 
     else:
         return JsonResponse({'ret': 1, 'msg': '不支持该类型http请求'})
 
 
-def listapplicants(request):
+def listjobs(request):
     # 增加对分页的支持
     try:
         # 要获取的第几页
@@ -57,7 +57,7 @@ def listapplicants(request):
         # 每页要显示多少条记录
         pagesize = request.params['pagesize']
         # 返回一个 QuerySet 对象 ，包含所有的表记录
-        qs = Applicant.objects.values()
+        qs = Job.objects.values()
 
         # 使用分页对象，设定每页多少条记录
         pgnt = Paginator(qs, pagesize)
@@ -76,55 +76,52 @@ def listapplicants(request):
         return JsonResponse({'ret': 2, 'msg': f'未知错误\n'})
 
 
-def addapplicant(request):
+def addjob(request):
     info = request.params['data']
     # 从请求消息中 获取要添加客户的信息
     # 并且插入到数据库中
     # 返回值 就是对应插入记录的对象
-    record = Applicant.objects.create(name=info['name'],
-                                     phonenumber=info['phonenumber'],
-                                     job=info['job'])
+    record = Job.objects.create(name=info['name'],
+                                description=info['desc'])
     return JsonResponse({'ret': 0, 'id': record.id})
 
 
-def modifyapplicant(request):
+def modifyjob(request):
     # 从请求消息中 获取修改客户的信息
     # 找到该客户，并且进行修改操作
-    applicantid = request.params['id']
+    jobid = request.params['id']
     newdata = request.params['newdata']
 
     try:
         # 根据 id 从数据库中找到相应的客户记录
-        applicant = Applicant.objects.get(id=applicantid)
-    except Applicant.DoesNotExist:
+        job = Job.objects.get(id=jobid)
+    except Job.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'id 为`{applicantid}`的申请者不存在'
+            'msg': f'id 为`{jobid}`的岗位不存在'
         }
 
     if 'name' in newdata:
-        applicant.name = newdata['name']
-    if 'phonenumber' in newdata:
-        applicant.phonenumber = newdata['phonenumber']
-    if 'job' in newdata:
-        applicant.address = newdata['job']
+        job.name = newdata['name']
+    if 'desc' in newdata:
+        job.description = newdata['desc']
     # 将修改信息保存到数据库
-    applicant.save()
+    job.save()
     return JsonResponse({'ret': 0})
 
 
-def deleteapplicant(request):
-    applicantid = request.params['id']
+def deletejob(request):
+    jobid = request.params['id']
 
     try:
         # 根据 id 从数据库中找到相应的客户记录
-        applicant = Applicant.objects.get(id=applicantid)
-    except Applicant.DoesNotExist:
+        job = Job.objects.get(id=jobid)
+    except Job.DoesNotExist:
         return {
             'ret': 1,
-            'msg': f'id 为`{applicantid}`的申请者不存在'
+            'msg': f'id 为`{jobid}`的岗位不存在'
         }
 
     # delete 方法就将该记录从数据库中删除了
-    applicant.delete()
+    job.delete()
     return JsonResponse({'ret': 0})
