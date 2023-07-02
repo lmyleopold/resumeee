@@ -120,5 +120,5 @@ def jobs(request):
         return JsonResponse({'ret': 0, 'retlist': [], 'total': 0})
 
     except:
-        return HttpResponse("这里是分页展示岗位")
-        # return JsonResponse({'ret': 2, 'msg': f'未知错误\n'})
+        # return HttpResponse("这里是分页展示岗位")
+        return JsonResponse({'ret': 2, 'msg': f'未知错误\n'})
