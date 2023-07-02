@@ -5,7 +5,7 @@
 """
 import requests, pprint
 
-# 先登陆,获取sessionid
+# 先登陆,获取 sessionid
 payload = {
         'username': 'test',
         'password': '123456'
@@ -28,19 +28,5 @@ response = requests.get('http://localhost/applicant/jobs/',
                           cookies={'sessionid': sessionid})
 
 pprint.pprint(response.json())
+print(response.headers.get('Content-Type'))
 
-
-
-# import requests, pprint
-#
-#
-#
-# # 再发送列出请求，注意多了 pagenum 和 pagesize
-# payload = {
-#     'pagenum': 1,
-#     'pagesize': 2
-# }
-#
-# response = requests.get('http://localhost/applicant/jobs/', params=payload)
-#
-# pprint.pprint(response.json())

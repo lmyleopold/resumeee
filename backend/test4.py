@@ -5,7 +5,7 @@
 """
 import requests, pprint
 
-# 先登陆,获取sessionid
+# 先登陆,获取 sessionid
 payload = {
         'username': 'lmy',
         'password': '88888888'
@@ -13,7 +13,6 @@ payload = {
 
 response = requests.post("http://localhost/api/mgr/signin",
                              data=payload)
-retDict = response.json()
 sessionid = response.cookies['sessionid']
 
 # 再发送列出请求，注意多了 pagenum 和 pagesize
@@ -23,6 +22,11 @@ payload1 = {
     'pagesize': 2
 }
 
+response1 = requests.get('http://localhost/api/mgr/applicants',
+              params=payload1,
+              cookies={'sessionid': sessionid})
+
+# 注意 执行完response2后total会+1
 payload2 = {
     'action': 'add_applicant',
     'data': {
@@ -31,10 +35,6 @@ payload2 = {
         'job': '后卫'
     }
 }
-
-response = requests.get('http://localhost/api/mgr/applicants',
-              params=payload1,
-              cookies={'sessionid': sessionid})
 
 response2 = requests.post('http://localhost/api/mgr/applicants',
               json=payload2,
@@ -51,4 +51,4 @@ response3 = requests.get('http://localhost/api/mgr/jobs',
               params=payload3,
               cookies={'sessionid': sessionid})
 
-pprint.pprint(response3.json())
+pprint.pprint(response2.json())
