@@ -7,26 +7,6 @@ import requests
 import mysql.connector
 
 
-def getApplicant():
-    # 连接到MySQL数据库
-    cnx = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='root',
-        database='resumeee'
-    )
-    # 创建游标对象
-    cursor = cnx.cursor()
-    # 执行数据库查询
-    query = "SELECT * FROM common_applicant"
-    cursor.execute(query)
-    # 获取数据库查询结果
-    db_data = cursor.fetchall()
-    # 关闭数据库连接
-    cursor.close()
-    cnx.close()
-    return db_data
-
 def check(reponse2):
     # 连接到MySQL数据库
     cnx = mysql.connector.connect(
