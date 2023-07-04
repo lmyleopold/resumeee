@@ -256,7 +256,7 @@ if __name__ == "__main__":
     from rich import print
 
     device = 'cuda:0'                                       # 指定GPU设备
-    saved_model_path = 'UIE/checkpoints/DuIE/model_best/'     # 训练模型存放地址
+    saved_model_path = 'model/'     # 训练模型存放地址
     tokenizer = AutoTokenizer.from_pretrained(saved_model_path) 
     model = torch.load(os.path.join(saved_model_path, 'model.pt'))
     model.to(device).eval()

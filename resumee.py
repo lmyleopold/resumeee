@@ -8,7 +8,7 @@ from inference import inference, event_extract_example, information_extract_exam
 
 
 device = 'cuda:0'
-saved_model_path = 'UIE/checkpoints/DuIE/model_best/'
+saved_model_path = 'model/'
 tokenizer = AutoTokenizer.from_pretrained(saved_model_path) 
 model = torch.load(os.path.join(saved_model_path, 'model.pt'))
 model.to(device).eval()
