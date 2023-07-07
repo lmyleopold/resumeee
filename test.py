@@ -21,7 +21,11 @@ test = Resumee(
                 }
             )
 
+print(test.path)
+print(test.ext)
+print(test.name)
 print(test.text)
+print(test.token)
 print('[+] NER Results: ', test.ner)
 print('[+] Information-Extraction Results: ', test.information)
 print('[+] Event-Extraction Results: ', test.event)
