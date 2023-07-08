@@ -2,6 +2,17 @@ from docx import Document
 import re
 import json
 
+#     # 将岗位信息添加到列表中
+#     job_data.append(job_info)
+#
+# # 将岗位信息转换为 JSON 字符串
+# json_data = json.dumps(job_data, ensure_ascii=False)
+#
+# # 将 JSON 字符串保存到文件
+# with open('job_data.json', 'w', encoding='utf-8') as file:
+#     file.write(json_data)
+
+
 def convert(word_file):
     # 打开 Word 文档
     job_data = {}
@@ -19,7 +30,7 @@ def convert(word_file):
         job_info = {}
 
         # 设置岗位名称
-        job_info['岗位名称'] = title_matches[i]
+        # job_info['岗位名称'] = title_matches[i]
 
         print(i+1,"岗位名称：",title_matches[i])
         # job_description_pattern = r"(?<=岗位职责：\n)(?=任职要求：)"
@@ -33,11 +44,11 @@ def convert(word_file):
             # print("-----------------------------")
             # print("岗位信息：",job_information)
             # print("-----------------------------\n")
-            job_description_pattern = r"(?<=\n岗位职责：\n).*(?=\n任职要求|\n职位要求)"
+            job_description_pattern = r"(?<=\n岗位职责[\n：:]).*(?=\n任职要求|\n职位要求)"
             job_description_match = re.findall(job_description_pattern, job_information, re.DOTALL)
             for jddescription in job_description_match:
-                job_info['岗位职责'] = jddescription
-                print("岗位职责：\n",jddescription)
+                job_info['岗位职责'] = jddescription.strip()
+                print("岗位职责：\n",jddescription.strip())
                 # print("----end-----")
             job_requirement_pattern = r"(?<=任职要求：\n|职位要求：\n|任职要求:\n|职位要求:\n).*(?=\d、)"
             job_requirement_match = re.findall(job_requirement_pattern, job_information, re.DOTALL)
@@ -46,8 +57,8 @@ def convert(word_file):
                 # if education_requirement_match:
                 #     print("！！学历要求：",education_requirement_match.group())
                 # experience_requirement_match = re.search(r"[^.!?]*学历[^.!?\n]")
-                job_info['任职要求'] = jrdescription
-                print("任职要求：\n",jrdescription)
+                job_info['任职要求'] = jrdescription.strip()
+                print("任职要求：\n",jrdescription.strip())
                 print("----end-----\n")
 
 
@@ -57,7 +68,7 @@ def convert(word_file):
             # print("-----------------------------")
             # print("岗位信息：",job_information)
             # print("-----------------------------\n")
-            job_description_pattern = r"(?<=岗位职责：\n).*(?=任职要求：|职位要求：|任职要求:|职位要求:)"
+            job_description_pattern = r"(?<=\n岗位职责[\n：:]).*(?=任职要求：|职位要求：|任职要求:|职位要求:)"
             job_description_match = re.findall(job_description_pattern, job_information, re.DOTALL)
             for description in job_description_match:
                 job_info['岗位职责'] = jddescription
