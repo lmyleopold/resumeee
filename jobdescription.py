@@ -4,7 +4,7 @@ import json
 
 def convert(word_file):
     # 打开 Word 文档
-    job_data = []
+    job_data = {}
     doc = Document(word_file)
     # 提取文本内容
     # text_content = []
@@ -68,7 +68,7 @@ def convert(word_file):
                 job_info['任职要求'] = jrdescription
                 print("任职要求：\n", jrdescription)
                 print("----end-----\n")
-        job_data.append(job_info)
+        job_data[title_matches[i]] = job_info
 
     json_data = json.dumps(job_data, ensure_ascii=False)
 
