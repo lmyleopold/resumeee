@@ -3,12 +3,12 @@ from django.db import models
 
 # Create your models here.
 class Applicant(models.Model):
-    # 应聘者姓名
-    name = models.CharField(max_length=200)
-    # 联系电话
-    phonenumber = models.CharField(max_length=200)
-    # 应聘工作
-    job = models.CharField(max_length=200)
+    # 应聘者姓名/学校/岗位
+    ner = models.CharField(max_length=200)
+    # 信息
+    information = models.CharField(max_length=600)
+    # 事迹
+    event = models.CharField(max_length=400)
     # more to add
 
 
