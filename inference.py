@@ -161,7 +161,7 @@ def information_extract_example(
     sentence: str, 
     schema: dict, 
     prob_threshold=0.6, 
-    max_seq_len=384
+    max_seq_len=512
     ) -> dict:
     """
     UIE信息抽取示例。
@@ -191,7 +191,7 @@ def information_extract_example(
             device,
             [sentence], 
             [subject_prompt], 
-            max_length=128, 
+            max_length=512, 
             prob_threshold=prob_threshold)[0]
         
         for subject in subjects:
@@ -256,7 +256,7 @@ if __name__ == "__main__":
     from rich import print
 
     device = 'cuda:0'                                       # 指定GPU设备
-    saved_model_path = 'model/'     # 训练模型存放地址
+    saved_model_path = 'model/UIE_Resume/'     # 训练模型存放地址
     tokenizer = AutoTokenizer.from_pretrained(saved_model_path) 
     model = torch.load(os.path.join(saved_model_path, 'model.pt'))
     model.to(device).eval()
