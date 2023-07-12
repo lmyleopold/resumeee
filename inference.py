@@ -98,7 +98,7 @@ def event_extract_example(
     sentence: str, 
     schema: dict, 
     prob_threshold=0.6,
-    max_seq_len=128,
+    max_seq_len=384,
     ) -> dict:
     """
     UIE事件抽取示例。
@@ -161,7 +161,7 @@ def information_extract_example(
     sentence: str, 
     schema: dict, 
     prob_threshold=0.6, 
-    max_seq_len=128
+    max_seq_len=384
     ) -> dict:
     """
     UIE信息抽取示例。
@@ -245,7 +245,7 @@ def ner_example(
         device,
         sentences, 
         schema, 
-        max_length=128, 
+        max_length=512, 
         prob_threshold=prob_threshold)
     for s, r in zip(schema, res):
         rsp[s] = r
