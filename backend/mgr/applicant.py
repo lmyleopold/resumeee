@@ -81,9 +81,12 @@ def addapplicant(request):
     # 从请求消息中 获取要添加客户的信息
     # 并且插入到数据库中
     # 返回值 就是对应插入记录的对象
-    record = Applicant.objects.create(name=info['name'],
-                                     phonenumber=info['phonenumber'],
-                                     job=info['job'])
+    # record = Applicant.objects.create(name=info['name'],
+    #                                  phonenumber=info['phonenumber'],
+    #                                  job=info['job'])
+    record = Applicant.objects.create(ner=info['ner'],
+                                     information=info['information'],
+                                     event=info['event'])
     return JsonResponse({'ret': 0, 'id': record.id})
 
 
@@ -102,12 +105,12 @@ def modifyapplicant(request):
             'msg': f'id 为`{applicantid}`的申请者不存在'
         }
 
-    if 'name' in newdata:
-        applicant.name = newdata['name']
-    if 'phonenumber' in newdata:
-        applicant.phonenumber = newdata['phonenumber']
-    if 'job' in newdata:
-        applicant.address = newdata['job']
+    if 'ner' in newdata:
+        applicant.ner = newdata['ner']
+    if 'information' in newdata:
+        applicant.information = newdata['information']
+    if 'event' in newdata:
+        applicant.address = newdata['event']
     # 将修改信息保存到数据库
     applicant.save()
     return JsonResponse({'ret': 0})
