@@ -1,5 +1,7 @@
 import json
 import re
+import pandas as pd
+import numpy as np
 
 # 数字映射字典
 number_mapping = {
@@ -14,15 +16,21 @@ number_mapping = {
     "九": "9"
 }
 
+df = pd.DataFrame(columns=['岗位名称',  '专业要求', '学历要求', '年龄要求','最低工作年限','最高工作年限'])
+
 # 打开JSON文件
 with open('./data/job_data.json', 'r') as f:
     data = json.load(f)
 
 for job in data:
+    new_row = pd.DataFrame({'岗位名称': job, '专业要求': None, '学历要求': None, '年龄要求': None, '最低工作年限': None, '最高工作年限':None }, index=[0])
+    df = pd.concat([df, new_row])
+    # df = df.append({'岗位名称': job, '工作年限要求': None, '专业要求': None, '学历要求': None, '年龄要求': None}, ignore_index=True)
     print(job)
     all_requirments = data[job]["任职要求"]
     #print(all_requirments)
     requirements = re.split(r'\d+[.、]', all_requirments)[1:]
+
     '''学历要求'''
     edubg = 0
     for requirement in requirements:
@@ -31,20 +39,19 @@ for job in data:
             education_pattern = r"(本科|硕士|博士|大专)"
             education = re.findall(education_pattern, requirement, re.IGNORECASE)
             if education and education[0] == '大专':
-                print("1")
+                df.loc[df['岗位名称'] == job, '学历要求'] = 1
                 edubg = 1
             if education and education[0] == '本科':
-                print("2")
+                df.loc[df['岗位名称'] == job, '学历要求'] = 2
                 edubg = 1
             if education and education[0] == '硕士':
-                print("3")
+                df.loc[df['岗位名称'] == job, '学历要求'] = 3
                 edubg = 1
             if education and education[0] == '博士':
-                print("4")
+                df.loc[df['岗位名称'] == job, '学历要求'] = 4
                 edubg = 1
-
     if edubg == 0:
-        print("0,No education background requirement")
+        df.loc[df['岗位名称'] == job, '学历要求'] = 0
 
     '''专业要求'''
     majors = []
@@ -54,7 +61,6 @@ for job in data:
         major_sentence_pattern = r"(?:(?<=，|；|:|;|\n)|^).*?专业.*(?=，|；|.|;|\n)"
         major_sentence = re.findall(major_sentence_pattern, requirement, re.IGNORECASE)
         if major_sentence:
-
             front_major_pattern = r"((?<=专业要求:).*(?=，|；|.|:|;|$))"
             front_major = re.findall(front_major_pattern, requirement, re.IGNORECASE)
             if front_major:
@@ -62,18 +68,18 @@ for job in data:
                 for i in range(len(majors)):
                     if re.search(r'[^\w\s]', majors[i]):
                         majors[i] = majors[1].replace('.', '')
-
             rear_major_pattern = r"(?<=\b)\w+(?=专业)"
             rear_major = re.findall(rear_major_pattern, requirement, re.IGNORECASE)
             if rear_major:
                 majors.append(rear_major[0])
-
     if len(majors) == 0:
-        print("No major requirement")
+        df.loc[df['岗位名称'] == job, '专业要求'] = '无要求'
     else:
         for major in majors:
             print(major)
-
+            # df.loc[df['岗位名称'] == job, '专业要求'] = ', '.join(major)
+            majors_str = '、 '.join(majors)
+            df.loc[df['岗位名称'] == job, '专业要求'] = f'"{majors_str}"'
 
     '''工作年限要求'''
     wyre = 0
@@ -94,20 +100,25 @@ for job in data:
                         if(len(workyearnum) == 2):
                             lowworkyear = workyearnum[0]
                             highworkyear = workyearnum[1]
-                            print(lowworkyear,"-",highworkyear)
+                            df.loc[df['岗位名称'] == job, '最低工作年限'] = lowworkyear
+                            df.loc[df['岗位名称'] == job, '最高工作年限'] = highworkyear
+                            # print(lowworkyear,"-",highworkyear)
                             wyre = 1
                         else:
                             if workyearnum[0] in number_mapping:
                                 workyearnum[0] = number_mapping[workyearnum[0]]
-                            lowworkyear = workyearnum[0]
+                            lowworkyear = int(workyearnum[0])
                             highworkyear = 99
-                            print(lowworkyear,"-",highworkyear)
+                            df.loc[df['岗位名称'] == job, '最低工作年限'] = lowworkyear
+                            df.loc[df['岗位名称'] == job, '最高工作年限'] = highworkyear
+                            # print(lowworkyear,"-",highworkyear)
                             wyre = 1
-
     if wyre == 0:
         lowworkyear = 0
         highworkyear = 99
-        print(lowworkyear, "-", highworkyear,"No work year requirement")
+        df.loc[df['岗位名称'] == job, '最低工作年限'] = lowworkyear
+        df.loc[df['岗位名称'] == job, '最高工作年限'] = highworkyear
+        # print(lowworkyear, "-", highworkyear,"No work year requirement")
 
     '''年龄要求'''
     agere = 0
@@ -120,17 +131,13 @@ for job in data:
                 age_pattern = r"\d+"
                 age = re.findall(age_pattern, requirement, re.IGNORECASE)
                 age_require = age[0]
-                print(age_require)
+                df.loc[df['岗位名称'] == job, '年龄要求'] = age_require
+                # print(age_require)
                 agere = 1
     if agere == 0:
-        print("0,No age limitation")
+        df.loc[df['岗位名称'] == job, '年龄要求'] = 0
+        # print("0,No age limitation")
 
-
-
-
-
-
-
-
-
-
+# 将数据写入新的CSV文件
+df.to_csv('./data/job_detail.csv', index=False)
+print("Write done!")

@@ -261,3 +261,4 @@ with open(csv_file, 'w', newline='', encoding='utf-8') as file:
             writer.writerow([name, label])
             print(label)
             print("---------")
+
