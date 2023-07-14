@@ -82,7 +82,8 @@ def addjob(request):
     # 并且插入到数据库中
     # 返回值 就是对应插入记录的对象
     record = Job.objects.create(name=info['name'],
-                                description=info['desc'])
+                                requirements=info['requirements'],
+                                responsibilities=info['responsibilities'])
     return JsonResponse({'ret': 0, 'id': record.id})
 
 
@@ -103,8 +104,10 @@ def modifyjob(request):
 
     if 'name' in newdata:
         job.name = newdata['name']
-    if 'desc' in newdata:
-        job.description = newdata['desc']
+    if 'requirements' in newdata:
+        job.requirements = newdata['requirements']
+    if 'responsibilities' in newdata['responsibilities']:
+        job.responsibilities = newdata['responsibilities']
     # 将修改信息保存到数据库
     job.save()
     return JsonResponse({'ret': 0})

@@ -3,6 +3,7 @@ os
 pymupdf
 re
 xml
+rich
 
 torch
 transformers==4.22.1

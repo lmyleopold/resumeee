@@ -90,7 +90,6 @@ def convert(word_file):
 # Word 文件路径
 word_file = "./data/岗位要求.docx"
 
-
 # 调用函数进行转换
 convert(word_file)
 
