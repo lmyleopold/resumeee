@@ -3,6 +3,7 @@ from tqdm import tqdm
 from rich import print
 
 from resumee import Resumee
+from person_info import reverse_mapping
 
 token = {
             'ner': ["人物", "学校", "工作单位"], 
@@ -14,31 +15,36 @@ token = {
         }
 
 def generate_data():
-    for i in tqdm(range(66, 101)):
-        test = Resumee(
-                    path = 'data/dataset_CV/CV/{0}.docx'.format(i),
+    data = {}
+    for i in tqdm(range(101, 110)):
+        try:
+            test = Resumee(
+                    path = 'data/test/data/{0}.docx'.format(i),
                     # path = 'text_extraction/temp.pdf',
                     token = token
                 )
+            data[str(i)] = {
+                "name": test.person_info["人物"],
+                "age": test.person_info["年龄"],
+                "education": reverse_mapping[test.person_info["学历"]],
+                "school": test.ner["学校"],
+                "work_time": test.person_info["工作年限"],
+                "match_position": ""
+            }
+        except:
+            data[str(i)] = {
+                "name": "",
+                "age": "",
+                "education": "",
+                "school": "",
+                "work_time": "",
+                "match_position": ""
+            }
 
-        # print(test.path)
-        # print(test.ext)
-        # print(test.name)
-        # print(test.text)
-        # print(test.token)
-        # print('[+] NER Results: ', test.ner)
-        # print('[+] Information-Extraction Results: ', test.information)
-
-        with open('data/json/{0}.json'.format(i), 'w', encoding='utf-8') as f:
-            json.dump(
-                {
-                    "path": test.path,
-                    "text": test.text,
-                    "token": test.token,
-                    "result": {
-                        "ner": test.ner,
-                        "information": test.information}}, 
-                f, ensure_ascii=False, indent = 4)
+        i = i + 1
+    
+    with open('data/test/submit.json'.format(i), 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent = 4)
 
 def test():
     test = Resumee(
@@ -54,5 +60,6 @@ def test():
     print('[+] NER Results: ', test.ner)
     print('[+] Information-Extraction Results: ', test.information)
     print('[+] Person-info Results: ', test.person_info)
-    
-test()
+
+generate_data()
+# test()
