@@ -153,8 +153,6 @@ def get_person_info(ner, information):
         year_diff_list.append(year_diff)
         whole_work_year += year_diff
 
-    # print(whole_work_year)
-
     '''年龄'''
     name = ner["人物"]
     target_job_list = []
@@ -163,17 +161,62 @@ def get_person_info(ner, information):
     else:
         name = name[0]
     try:
-        age = information[name]["年龄"]
-        if len(age) == 1:
-            age = age[0]
+        age_list = information[name]["年龄"]
+        for age in age_list:
             try:
                 if age.endswith("岁"):
                     age = age[:-1]
                 age = int(age)
+                if age < 18 or age > 60:
+                    age = 0
+                break
             except ValueError:
-                age = 0
-        else:
-            age = 0
+                bday_list = information[name]["出生日期"]
+                bday_cal_list = []
+                for bday in bday_list:
+                    month = 0
+                    year = 0
+                    day = 0
+                    if '.' in bday:
+                        try:
+                            year, month, day = bday.split(".")
+                            year = int(year)
+                            month = int(month)
+                            day = int(day)
+                        except ValueError:
+                            year, month = bday.split(".")
+                            year = int(year)
+                            month = int(month)
+                            day = 0
+                    if '/' in bday:
+                        year, month, day = bday.split("/")
+                        year = int(year)
+                        month = int(month)
+                        day = int(day)
+                    if '年' in bday:
+                        year = bday.split("年")[0]
+                        month = bday.split("年")[1].split("月")[0]
+                        year = int(year)
+                        try:
+                            month = int(month)
+                            day = int(day)
+                        except ValueError:  # 处理2000年
+                            month = 0
+                            day = 0
+
+                    '''caculation(以2023.4.1计算)'''
+                    if month >= 4:
+                        age = 2023 - year
+                    else:
+                        age = 2023 - year + 1
+                    if age < 18 or age > 60:
+                        age = 0
+                    bday_cal_list.append(age)
+                if len(bday_cal_list):
+                    age = max(bday_cal_list)
+                else:
+                    age = 0
+
         '''任职意向'''
         for taget_jobs in information[name]["职务"]:
             target_job_list.append(taget_jobs)
