@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,20 +76,38 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # },
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'resumeee',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '3306',
+dbtype = os.environ.get('RESUMEE_DBTYPE')
+
+if dbtype == 'sqlite':
+    db_dir = os.environ.get('RESUMEE_SQLITE_DIR')
+    if db_dir is None:
+        db_dir = BASE_DIR / "db.sqlite3"
+        logging.warning("sqlite file location not provided, fallback to db.sqlite3")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': db_dir
+        },
     }
-}
+elif dbtype == 'mysql':
+    db_name = os.environ.get('RESUMEE_MYSQL_NAME')
+    db_user = os.environ.get('RESUMEE_MYSQL_USER')
+    db_pass = os.environ.get('RESUMEE_MYSQL_PASSWORD')
+    db_host = os.environ.get('RESUMEE_MYSQL_HOST')
+    db_port = os.environ.get('RESUMEE_MYSQL_PORT')
+    assert db_name and db_user and db_pass and db_host and db_port is not None, "Not enough parameters for MySQL backend"
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': db_name,
+            'USER': db_user,
+            'PASSWORD': db_pass,
+            'HOST': db_host,
+            'PORT': db_port
+        }
+    }
+else:
+    raise Exception("Must provide a database backend type through environment variable RESUMEE_DBTYPE.")
 
 
 # Password validation

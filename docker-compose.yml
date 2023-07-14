@@ -1,0 +1,32 @@
+version: "2.1"
+services:
+  database:
+    image: "mariadb:lts"
+    environment:
+      MYSQL_ROOT_PASSWORD: resumeeerootpass
+      MYSQL_DATABASE: resumeee 
+      MYSQL_USER: resumeee
+      MYSQL_PASSWORD: resumeeerootpass
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      timeout: 20s
+      retries: 10
+  backend:
+    build: backend
+    depends_on: 
+      database:
+        condition: service_healthy
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      RESUMEE_DBTYPE: mysql
+      RESUMEE_MYSQL_NAME: resumeee
+      RESUMEE_MYSQL_USER: resumeee
+      RESUMEE_MYSQL_PASSWORD: resumeeerootpass
+      RESUMEE_MYSQL_HOST: database
+      RESUMEE_MYSQL_PORT: 3306
+  frontend:
+    build: frontend
+    ports:
+      - "5173:5173"
