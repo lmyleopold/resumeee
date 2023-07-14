@@ -43,15 +43,16 @@ def generate_data():
 def test():
     test = Resumee(
                     path = 'data/dataset_CV/CV/71.docx',
-                    # path = 'text_extraction/temp.pdf',
+                    # path = 'temp.pdf',
                     token = token
                 )
-    print(test.path)
-    print(test.ext)
-    print(test.name)
-    print(test.text)
-    print(test.token)
+    # print(test.path)
+    # print(test.ext)
+    # print(test.name)
+    # print(test.text)
+    # print(test.token)
     print('[+] NER Results: ', test.ner)
     print('[+] Information-Extraction Results: ', test.information)
-
+    print('[+] Person-info Results: ', test.person_info)
+    
 test()

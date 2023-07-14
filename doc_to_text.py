@@ -3,7 +3,7 @@ import docx2pdf
 from operator import itemgetter
 import os
 
-temp = "text_extraction/temp.pdf"
+temp = "temp.pdf"
 
 def extract_text_with_position(page):
     text_instances = page.get_text("dict", flags=11)["blocks"]
