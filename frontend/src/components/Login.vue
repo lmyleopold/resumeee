@@ -17,7 +17,7 @@ export default defineComponent({
         <el-card class="box-card" shadow="hover">
         <div class="logo-container">
             <el-col>
-                <img class="logo-container" src="logo.png"/>
+                <img class="logo-container" src="/logo.png"/>
             </el-col>
         </div>
         <el-tabs type="card" v-model="activeName" @tab-click="handleClick">
