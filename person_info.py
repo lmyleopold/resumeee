@@ -74,10 +74,11 @@ def get_person_info(ner, information):
         else:  # 时间段有2个或0个
             times = company_info.get("时间")
             if (len(times) != 2):
-                companys.remove(company)
-                break
-            end_time = times[1]
-            start_time = times[0]
+                end_time = '2000.01'
+                start_time = '2000.02'
+            else:
+                end_time = times[1]
+                start_time = times[0]
             # print("成功读取时间，成功下标得到时间", start_time, "-", end_time)
             # print(start_time,"-",end_time)
             # print("end_time is",end_time)
@@ -94,12 +95,24 @@ def get_person_info(ner, information):
                 end_year = int(end_year)
                 end_month = 13
         except ValueError:
-            year = end_time.split("年")[0]
-            end_year = int(year)
-            # print("结束年份为", end_year)
-            month = end_time.split("年")[1].split("月")[0]
-            end_month = int(month)
-            # print("结束月份为", end_month)
+            try:
+                year = end_time.split("年")[0]
+                end_year = int(year)
+                # print("结束年份为", end_year)
+                month = end_time.split("年")[1].split("月")[0]
+                end_month = int(month)
+                # print("结束月份为", end_month)
+            except ValueError:
+                if len(end_time.split("/")) == 2:
+                    year, month = end_time.split("/")
+                    end_year = int(year)
+                    # print("结束年份为",end_year)
+                    end_month = int(month)
+                    # print("结束月份为",end_month)
+                else:
+                    end_year = end_time.split("/")[0]
+                    end_year = int(end_year)
+                    end_month = 13
 
         try:
             if len(start_time.split(".")) == 2:
@@ -113,16 +126,24 @@ def get_person_info(ner, information):
                 start_year = int(start_year)
                 start_month = 13
         except ValueError:
-            year = start_time.split("年")[0]
-            start_year = int(year)
-            # print("开始年份为", start_year)
-            month = start_time.split("年")[1].split("月")[0]
-            start_month = int(month)
-            # print("开始月份为", start_month)
-
-        # year, month = start_time.split(".")
-        # start_year = int(year)
-        # start_month = int(month)
+            try:
+                year = start_time.split("年")[0]
+                start_year = int(year)
+                # print("开始年份为", start_year)
+                month = start_time.split("年")[1].split("月")[0]
+                start_month = int(month)
+                # print("开始月份为", start_month)
+            except ValueError:
+                if len(start_time.split("/")) == 2:
+                    year, month = start_time.split("/")
+                    start_year = int(year)
+                    # print("结束年份为",end_year)
+                    start_month = int(month)
+                    # print("结束月份为",end_month)
+                else:
+                    start_year = start_time.split("/")[0]
+                    start_year = int(start_year)
+                    start_month = 13
 
         if start_month >= end_month:
             year_diff = end_year - start_year
