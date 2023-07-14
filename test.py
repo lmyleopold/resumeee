@@ -1,9 +1,5 @@
-import os
-import torch
-from tqdm import tqdm
-from typing import List
-from transformers import AutoTokenizer
 import json
+from tqdm import tqdm
 from rich import print
 
 from resumee import Resumee
