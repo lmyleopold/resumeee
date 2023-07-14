@@ -26,3 +26,7 @@ services:
       RESUMEE_MYSQL_PASSWORD: resumeeerootpass
       RESUMEE_MYSQL_HOST: database
       RESUMEE_MYSQL_PORT: 3306
+  frontend:
+    build: frontend
+    ports:
+      - "5173:5173"
