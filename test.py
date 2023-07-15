@@ -3,6 +3,7 @@ from tqdm import tqdm
 from rich import print
 
 from resumee import Resumee
+from jobs import Jobs
 from person_info import reverse_mapping
 
 token = {
@@ -60,6 +61,10 @@ def test():
     print('[+] NER Results: ', test.ner)
     print('[+] Information-Extraction Results: ', test.information)
     print('[+] Person-info Results: ', test.person_info)
+
+    test_job = Jobs('data/岗位要求.docx')
+    print(test_job.description['产品运营'])
+    print(test_job.job_info['产品运营'])
 
 # generate_data()
 test()
