@@ -8,10 +8,13 @@ from person_info import *
 from person_extraction import *
 
 
-device = 'cuda:0'
+device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 saved_model_path = 'model/UIE_Resume'
-tokenizer = AutoTokenizer.from_pretrained(saved_model_path) 
-model = torch.load(os.path.join(saved_model_path, 'model.pt')).half()
+tokenizer = AutoTokenizer.from_pretrained(saved_model_path)
+if device == 'cuda:0':
+    model = torch.load(os.path.join(saved_model_path, 'model.pt')).half()
+else:
+    model = torch.load(os.path.join(saved_model_path, 'model.pt'), map_location=torch.device('cpu'))
 model.to(device).eval()
 
 

@@ -7,23 +7,30 @@ from django.http import JsonResponse
 import json
 from common.models import Job
 from django.core.paginator import Paginator, EmptyPage
+from django.conf import settings
+import json
+from tqdm import tqdm
+from rich import print
+import sys
+import os
+from extraction.jobs import Jobs
 
 
 def dispatcher(request):  # 将请求参数统一放入request 的 params 属性中，方便后续处理
     # 根据session判断用户是否是登录的管理员用户
-    if 'usertype' not in request.session:
-        return JsonResponse({
-            'ret': 302,
-            'msg': '未登录',
-            'redirect': '/mgr/sign.html'},
-            status=302)
-
-    if request.session['usertype'] != 'mgr':
-        return JsonResponse({
-            'ret': 302,
-            'msg': '用户非mgr类型',
-            'redirect': '/mgr/sign.html'},
-            status=302)
+    # if 'usertype' not in request.session:
+    #     return JsonResponse({
+    #         'ret': 302,
+    #         'msg': '未登录',
+    #         'redirect': '/mgr/sign.html'},
+    #         status=302)
+    #
+    # if request.session['usertype'] != 'mgr':
+    #     return JsonResponse({
+    #         'ret': 302,
+    #         'msg': '用户非mgr类型',
+    #         'redirect': '/mgr/sign.html'},
+    #         status=302)
 
     # GET请求 参数在url中，同过request 对象的 GET属性获取
     if request.method == 'GET':
@@ -77,14 +84,19 @@ def listjobs(request):
 
 
 def addjob(request):
-    info = request.params['data']
-    # 从请求消息中 获取要添加客户的信息
-    # 并且插入到数据库中
-    # 返回值 就是对应插入记录的对象
-    record = Job.objects.create(name=info['name'],
-                                requirements=info['requirements'],
-                                responsibilities=info['responsibilities'])
-    return JsonResponse({'ret': 0, 'id': record.id})
+    uploaded_file = request.FILES['file']
+    file_path = os.path.join(settings.TEMP_UPLOAD_DIR, uploaded_file.name)
+
+    with open(file_path, 'wb') as file:
+        for chunk in uploaded_file.chunks():
+            file.write(chunk)
+
+    test_job = Jobs(file_path)
+    for pos in test_job.description:
+        record = Job.objects.create(name=pos,
+                                    responsibilities=test_job.description[pos],
+                                    requirements=test_job.job_info[pos])
+    return JsonResponse({'ret': 0, 'id': 666})
 
 
 def modifyjob(request):

@@ -10,6 +10,7 @@ from mgr import sign_in_out
 
 urlpatterns = [
     path('applicants', applicant.dispatcher),
+    path('jobs/upload', job.addjob),
     path('jobs', job.dispatcher),
     path('signin', sign_in_out.signin),
     path('signout', sign_in_out.signout),

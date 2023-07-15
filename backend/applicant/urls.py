@@ -13,6 +13,7 @@ urlpatterns = [
     path('resume/', views.resume),
     # path('jobs/', views.listjobs),
     path('jobs/', views.jobs),
+    path('upload/', views.add_applicant),
     path('signin', sign_in_out.signin),
     path('signout', sign_in_out.signout),
 ]

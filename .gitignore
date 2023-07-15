@@ -1,5 +1,6 @@
 Scripts/
 backend/migrations/
+backend/temp_uploads/
 .idea/
 venv/
 
