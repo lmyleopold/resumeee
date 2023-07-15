@@ -6,6 +6,7 @@ from transformers import AutoTokenizer
 from doc_to_text import doc_to_text
 from person_info import *
 from person_extraction import *
+from job_fit import job_fit
 
 
 device = 'cuda:0'
@@ -55,3 +56,6 @@ class Resumee(object):
         
         # return ner, information, event
         return ner, information
+
+    def fit(self, job_info, topk=1):
+        return job_fit(job_info, self.person_info, topk)

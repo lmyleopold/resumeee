@@ -2,8 +2,8 @@ import json
 from tqdm import tqdm
 from rich import print
 
-from extraction.resumee import Resumee
 from extraction.jobs import Jobs
+from extraction.resumee import Resumee
 from extraction.person_info import reverse_mapping
 
 token = {
@@ -17,6 +17,7 @@ token = {
 
 def generate_data():
     data = {}
+    jobs = Jobs('data/岗位要求.docx')
     for i in tqdm(range(101, 110)):
         try:
             test = Resumee(
@@ -24,13 +25,14 @@ def generate_data():
                     # path = 'text_extraction/temp.pdf',
                     token = token
                 )
+            fit = test.fit(jobs.job_info)
             data[str(i)] = {
                 "name": test.person_info["人物"],
                 "age": test.person_info["年龄"],
                 "education": reverse_mapping[test.person_info["学历"]],
-                "school": test.ner["学校"],
+                "school": test.person_info["最高学历学校"],
                 "work_time": test.person_info["工作年限"],
-                "match_position": ""
+                "match_position": "" if len(fit) == 0 else fit[0]
             }
         except:
             data[str(i)] = {
@@ -49,7 +51,7 @@ def generate_data():
 
 def test():
     test = Resumee(
-                    path = 'data/dataset_CV/CV/71.docx',
+                    path = 'data/test/data/105.docx',
                     # path = 'temp.pdf',
                     token = token
                 )
@@ -65,6 +67,8 @@ def test():
     test_job = Jobs('data/岗位要求.docx')
     print(test_job.description['产品运营'])
     print(test_job.job_info['产品运营'])
+
+    print(test.fit(test_job.job_info))
 
 # generate_data()
 test()

@@ -3,9 +3,7 @@
         "name": "蔡于纬",
         "age": 23,
         "education": "无学历",
-        "school": [
-            "华南师范大学"
-        ],
+        "school": "华南师范大学",
         "work_time": 0,
         "match_position": ""
     },
@@ -13,9 +11,7 @@
         "name": "林俊凯",
         "age": 24,
         "education": "无学历",
-        "school": [
-            "广州二中"
-        ],
+        "school": "广州二中",
         "work_time": 0,
         "match_position": ""
     },
@@ -23,9 +19,7 @@
         "name": "蔡雅惠",
         "age": 29,
         "education": "高中",
-        "school": [
-            "惠州市第一中学"
-        ],
+        "school": "惠州市第一中学",
         "work_time": 0,
         "match_position": ""
     },
@@ -41,12 +35,9 @@
         "name": "陈铭",
         "age": 34,
         "education": "硕士",
-        "school": [
-            "山东大学",
-            "兰州交通大学"
-        ],
+        "school": "兰州交通大学",
         "work_time": 5,
-        "match_position": ""
+        "match_position": "项目主管"
     },
     "106": {
         "name": "",
@@ -60,19 +51,15 @@
         "name": "许伦吉",
         "age": 27,
         "education": "本科",
-        "school": [
-            "广西中医药大学"
-        ],
+        "school": "广西中医药大学",
         "work_time": 0,
-        "match_position": ""
+        "match_position": "风控专员"
     },
     "108": {
         "name": "陈佳雨",
         "age": 30,
         "education": "无学历",
-        "school": [
-            "怀化职业技术学院"
-        ],
+        "school": "怀化职业技术学院",
         "work_time": 0,
         "match_position": ""
     },
@@ -80,9 +67,7 @@
         "name": "赖英贤",
         "age": 27,
         "education": "硕士",
-        "school": [
-            "北京工商大学"
-        ],
+        "school": "北京工商大学",
         "work_time": -2001,
         "match_position": ""
     }
