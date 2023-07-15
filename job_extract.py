@@ -15,11 +15,10 @@ number_mapping = {
     "九": "9"
 }
 
-
-def jobdoc_to_csv(word_file,csv_file):
+def read_description(path):
     # 打开 Word 文档
     job_data = {}
-    doc = Document(word_file)
+    doc = Document(path)
     content = ''
     for paragraph in doc.paragraphs:
         content += paragraph.text + ('\n')
@@ -75,15 +74,13 @@ def jobdoc_to_csv(word_file,csv_file):
                 #print("任职要求：\n", jrdescription)
                 #print("----end-----\n")
         job_data[title_matches[i]] = job_info
-    df = pd.DataFrame(columns=['岗位名称', '专业要求', '学历要求', '年龄要求', '最低工作年限', '最高工作年限'])
-    for job in job_data:
-        new_row = pd.DataFrame({'岗位名称': job, '专业要求': None, '学历要求': None, '年龄要求': None, '最低工作年限': None, '最高工作年限': None},
-                               index=[0])
-        df = pd.concat([df, new_row])
-        # df = df.append({'岗位名称': job, '工作年限要求': None, '专业要求': None, '学历要求': None, '年龄要求': None}, ignore_index=True)
-        # print(job)
-        all_requirments = job_data[job]["任职要求"]
-        # print(all_requirments)
+    return job_data
+
+def extract_job_info(descriptions):
+    job_info = {job: {} for job in descriptions}
+    
+    for job in descriptions:
+        all_requirments = descriptions[job]["任职要求"]
         requirements = re.split(r'\d+[.、]', all_requirments)[1:]
 
         '''学历要求'''
@@ -96,23 +93,23 @@ def jobdoc_to_csv(word_file,csv_file):
                 education = re.findall(education_pattern, requirement, re.IGNORECASE)
                 if education and education[0] == '大专':
                     required_qualification_num = 1
-                    df.loc[df['岗位名称'] == job, '学历要求'] = required_qualification_num
+                    job_info[job]['学历要求'] = required_qualification_num
                     edubg = 1
                 if education and education[0] == '本科':
                     required_qualification_num = 2
-                    df.loc[df['岗位名称'] == job, '学历要求'] = required_qualification_num
+                    job_info[job]['学历要求'] = required_qualification_num
                     edubg = 1
                 if education and education[0] == '硕士':
                     required_qualification_num = 3
-                    df.loc[df['岗位名称'] == job, '学历要求'] = required_qualification_num
+                    job_info[job]['学历要求'] = required_qualification_num
                     edubg = 1
                 if education and education[0] == '博士':
                     required_qualification_num = 4
-                    df.loc[df['岗位名称'] == job, '学历要求'] = required_qualification_num
+                    job_info[job]['学历要求'] = required_qualification_num
                     edubg = 1
         if edubg == 0:
             required_qualification_num = 0
-            df.loc[df['岗位名称'] == job, '学历要求'] = required_qualification_num
+            job_info[job]['学历要求'] = required_qualification_num
 
         '''专业要求'''
         majors = []
@@ -135,14 +132,14 @@ def jobdoc_to_csv(word_file,csv_file):
                     majors.append(rear_major[0])
         if len(majors) == 0:
             major_requirement = '无要求'
-            df.loc[df['岗位名称'] == job, '专业要求'] = major_requirement
+            job_info[job]['专业要求'] = major_requirement
+
 
         else:
             for major in majors:
-                # df.loc[df['岗位名称'] == job, '专业要求'] = ', '.join(major)
                 majors_str = '、 '.join(majors)
                 major_requirement = f'"{majors_str}"'
-                df.loc[df['岗位名称'] == job, '专业要求'] = major_requirement
+                job_info[job]['专业要求'] = major_requirement
 
         '''工作年限要求'''
         wyre = 0
@@ -163,8 +160,8 @@ def jobdoc_to_csv(word_file,csv_file):
                             if (len(workyearnum) == 2):
                                 lowworkyear = workyearnum[0]
                                 highworkyear = workyearnum[1]
-                                df.loc[df['岗位名称'] == job, '最低工作年限'] = lowworkyear
-                                df.loc[df['岗位名称'] == job, '最高工作年限'] = highworkyear
+                                job_info[job]['最低工作年限'] = lowworkyear
+                                job_info[job]['最高工作年限'] = highworkyear
                                 # print(lowworkyear,"-",highworkyear)
                                 wyre = 1
                             else:
@@ -172,15 +169,15 @@ def jobdoc_to_csv(word_file,csv_file):
                                     workyearnum[0] = number_mapping[workyearnum[0]]
                                 lowworkyear = int(workyearnum[0])
                                 highworkyear = 99
-                                df.loc[df['岗位名称'] == job, '最低工作年限'] = lowworkyear
-                                df.loc[df['岗位名称'] == job, '最高工作年限'] = highworkyear
+                                job_info[job]['最低工作年限'] = lowworkyear
+                                job_info[job]['最高工作年限'] = highworkyear
                                 # print(lowworkyear,"-",highworkyear)
                                 wyre = 1
         if wyre == 0:
             lowworkyear = 0
             highworkyear = 99
-            df.loc[df['岗位名称'] == job, '最低工作年限'] = lowworkyear
-            df.loc[df['岗位名称'] == job, '最高工作年限'] = highworkyear
+            job_info[job]['最低工作年限'] = lowworkyear
+            job_info[job]['最高工作年限'] = highworkyear
             # print(lowworkyear, "-", highworkyear,"No work year requirement")
 
         '''年龄要求'''
@@ -194,23 +191,19 @@ def jobdoc_to_csv(word_file,csv_file):
                     age_pattern = r"\d+"
                     age = re.findall(age_pattern, requirement, re.IGNORECASE)
                     age_require = int(age[0])
-                    df.loc[df['岗位名称'] == job, '年龄要求'] = age_require
+                    job_info[job]['年龄要求'] = age_require
                     agere = 1
         if agere == 0:
             age_require = 0
-            df.loc[df['岗位名称'] == job, '年龄要求'] = age_require
-            # print("0,No age limitation")
-        print(job,age_require,lowworkyear,highworkyear,major_requirement,required_qualification_num)
+            job_info[job]['年龄要求'] = age_require
+        # print(job,age_require,lowworkyear,highworkyear,major_requirement,required_qualification_num)
+    
+    return job_info
 
-    df.to_csv(csv_file, index=False)
-    print("Write done!")
-
-    # return job_details
-
-# Word 文件路径
-word_file = "./data/岗位要求.docx"
-# 保存的CSV文件路径
-csv_file = "./data/job_detail.csv"
-# 调用函数进行转换
-jobdoc_to_csv(word_file,csv_file)
+# # Word 文件路径
+# word_file = "./data/岗位要求.docx"
+# # 保存的CSV文件路径
+# csv_file = "./data/job_detail.csv"
+# # 调用函数进行转换
+# print(read_job(word_file))
 
