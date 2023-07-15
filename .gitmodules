@@ -1,0 +1,3 @@
+[submodule "model/UIE_Resume"]
+	path = model/UIE_Resume
+	url = https://huggingface.co/Fsadness/UIE_Resume

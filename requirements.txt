@@ -1,8 +1,5 @@
 docx2pdf
-os
 pymupdf
-re
-xml
 rich
 
 torch
