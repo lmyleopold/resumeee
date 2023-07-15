@@ -21,23 +21,25 @@ reverse_mapping = {
 def get_person_info(ner, information):
     '''学历'''
     schools = ner.get("学校", {})
-    for school in schools:
-        # print(school)
+    if len(schools): 
+        for school in schools:
+            # print(school)
+            try:
+                qualifications = information[school]['学历']
+                quanlification_list = []
+                for qualification in qualifications:
+                    if qualification in qualification_mapping:
+                        qualification = qualification_mapping[qualification]
+                        quanlification_list.append(qualification)
+            except KeyError:
+                qualifications = None
+                highest_edu_num = "0"
         try:
-            qualifications = information[school]['学历']
-            quanlification_list = []
-            for qualification in qualifications:
-                if qualification in qualification_mapping:
-                    qualification = qualification_mapping[qualification]
-                    quanlification_list.append(qualification)
-        except KeyError:
-            qualifications = None
+            highest_edu_num = max(quanlification_list)
+            # print(max(quanlification_list))
+        except ValueError:
             highest_edu_num = "0"
-
-    try:
-        highest_edu_num = max(quanlification_list)
-        # print(max(quanlification_list))
-    except ValueError:
+    else:
         highest_edu_num = "0"
 
     '''最高学历学校'''
