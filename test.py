@@ -61,5 +61,5 @@ def test():
     print('[+] Information-Extraction Results: ', test.information)
     print('[+] Person-info Results: ', test.person_info)
 
-generate_data()
-# test()
+# generate_data()
+test()
