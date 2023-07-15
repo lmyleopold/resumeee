@@ -30,15 +30,30 @@ def get_person_info(ner, information):
                 if qualification in qualification_mapping:
                     qualification = qualification_mapping[qualification]
                     quanlification_list.append(qualification)
-            try:
-                highest_edu_num = max(quanlification_list)
-                # print(max(quanlification_list))
-            except ValueError:
-                highest_edu_num = "0"
-
         except KeyError:
             qualifications = None
             highest_edu_num = "0"
+
+    try:
+        highest_edu_num = max(quanlification_list)
+        # print(max(quanlification_list))
+    except ValueError:
+        highest_edu_num = "0"
+
+    '''最高学历学校'''
+    highest_edu = reverse_mapping[highest_edu_num]
+    highest_school = '某学校'
+    for school in schools:
+        if school in information:
+            education = information[school]['学历']
+            try:
+                if highest_edu in education:
+                    highest_school = school
+                else:
+                    highest_school = school
+            except TypeError:
+                highest_school = '某学校'
+
 
     '''专业'''
     major_list = []
@@ -232,7 +247,9 @@ def get_person_info(ner, information):
         '工作年限': whole_work_year,
         '专业': ", ".join(major_list), 
         '学历': highest_edu_num, 
-        '任职意向': ", ".join(target_job_list)
+        '任职意向': ", ".join(target_job_list),
+        '最高学历学校': highest_school
+
     }
     return person_info
 
