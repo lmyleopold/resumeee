@@ -21,8 +21,3 @@ class Jobs(object):
                 json.dump(self.description, f, ensure_ascii=False, indent=4)
             else:
                 return
-
-# 使用示例
-test = Jobs("data/岗位要求.docx")
-test.export("data/job_info.json")
-test.export("data/descriptions.json", action="description")
