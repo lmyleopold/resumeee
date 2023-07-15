@@ -2,9 +2,9 @@ import json
 from tqdm import tqdm
 from rich import print
 
-from resumee import Resumee
-from jobs import Jobs
-from person_info import reverse_mapping
+from extraction.resumee import Resumee
+from extraction.jobs import Jobs
+from extraction.person_info import reverse_mapping
 
 token = {
             'ner': ["人物", "学校", "工作单位"], 

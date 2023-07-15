@@ -3,9 +3,9 @@ from typing import List
 import torch
 from transformers import AutoTokenizer
 
-from extraction import *
-from person_info import *
 from doc_to_text import doc_to_text
+from person_info import *
+from person_extraction import *
 
 
 device = 'cuda:0'

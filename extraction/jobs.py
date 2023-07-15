@@ -1,6 +1,6 @@
 import json
 
-from job_extract import *
+from job_extraction import *
 
 class Jobs(object):
     # example token: {'ner': ['token'], 'information': {'token': ['information']}, 'event': {'token': ['event']}}
