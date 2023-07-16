@@ -50,8 +50,8 @@ def generate_data():
 
 def test():
     test = Resumee(
-                    # path = 'data/test_ocr.pdf',
-                    path = 'data/test/data/276.docx',
+                    # path = 'data/test/data/255.docx',
+                    path = 'data/255_scan.pdf',
                     # path = 'temp.pdf',
                     token = token
                 )
