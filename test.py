@@ -50,7 +50,8 @@ def generate_data():
 
 def test():
     test = Resumee(
-                    path = 'data/test_ocr.pdf',
+                    # path = 'data/test_ocr.pdf',
+                    path = 'data/test/data/276.docx',
                     # path = 'temp.pdf',
                     token = token
                 )
@@ -63,12 +64,11 @@ def test():
     print('[+] NER Results: ', test.ner)
     print('[+] Information-Extraction Results: ', test.information)
     print('[+] Person-info Results: ', test.person_info)
+    print('[+] Portrait Results: ', test.label)
 
     test_job = Jobs('data/岗位要求.docx')
-    print(test_job.description['产品运营'])
-    print(test_job.job_info['产品运营'])
 
-    print(test.fit(test_job.job_info))
+    print('[+] Job_fit Results: ', test.fit(test_job.job_info))
 
 # generate_data()
 test()
