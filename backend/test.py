@@ -18,7 +18,7 @@ token = {
 def generate_data():
     data = {}
     jobs = Jobs('data/岗位要求.docx')
-    for i in tqdm(range(101, 110)):
+    for i in tqdm(range(101, 301)):
         try:
             test = Resumee(
                     path = 'data/test/data/{0}.docx'.format(i),
@@ -44,31 +44,33 @@ def generate_data():
                 "match_position": ""
             }
 
-        i = i + 1
-    
-    with open('data/test/submit.json'.format(i), 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent = 4)
+        if i % 50 == 0:
+            with open('data/test/submit_{0}.json'.format(i), 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent = 4)
 
 def test():
     test = Resumee(
-                    path = 'data/test/data/105.docx',
+                    # path = 'data/test_ocr.pdf',
+                    path = 'data/test/data/276.docx',
                     # path = 'temp.pdf',
                     token = token
                 )
-    # print(test.path)
-    # print(test.ext)
-    # print(test.name)
-    # print(test.text)
-    # print(test.token)
+
+    print(test.path)
+    print(test.ext)
+    print(test.name)
+    print(test.text)
+    print(test.token)
     print('[+] NER Results: ', test.ner)
     print('[+] Information-Extraction Results: ', test.information)
     print('[+] Person-info Results: ', test.person_info)
+    print('[+] Portrait Results: ', test.label)
 
     test_job = Jobs('data/岗位要求.docx')
-    print(test_job.description['产品运营'])
-    print(test_job.job_info['产品运营'])
+    # print(test_job.description['产品运营'])
+    # print(test_job.job_info['产品运营'])
 
-    print(test.fit(test_job.job_info))
+    print('[+] Job_fit Results: ', test.fit(test_job.job_info))
 
 # generate_data()
 test()
