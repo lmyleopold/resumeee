@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'common.apps.CommonConfig',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -50,7 +51,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+SESSION_COOKIE_SAMESITE = 'None'
 
 ROOT_URLCONF = 'config.urls'
 
