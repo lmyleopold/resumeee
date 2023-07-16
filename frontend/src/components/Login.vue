@@ -15,6 +15,8 @@ export default defineComponent({
     },
     methods: {
         handleSubmit() {
+            this.$router.push('/mgr')
+
             if (activeName.value === 'applicant') {
                 var api_url = 'applicant/signin';
             } else if (activeName.value === 'mgr') {

@@ -10,7 +10,7 @@ export default defineComponent({
 </script>
 
 <script setup>
-defineProps(['name', 'desc'])
+defineProps(['name', 'desc', 'detail_url'])
 </script>
 
 <template>
@@ -18,11 +18,11 @@ defineProps(['name', 'desc'])
     <template #header>
       <div class="card-header">
         <span id="job-title">{{ name }}</span>
-        <el-button class="button" text>详细信息</el-button>
+        <el-button class="button" text v-if="detail_url">详细信息</el-button>
       </div>
     </template>
     <div>
-      <div v-for="o in 2" class="text item">{{ desc }}</div>
+      <div class="text item">{{ desc }}</div>
     </div>
   </el-card>
 </template>
@@ -43,10 +43,6 @@ defineProps(['name', 'desc'])
 
 .item {
   margin-bottom: 18px;
-}
-
-.box-card {
-  width: 480px;
 }
 </style>
 
